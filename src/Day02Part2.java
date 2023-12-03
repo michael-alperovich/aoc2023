@@ -47,7 +47,6 @@ public class Day02Part2 {
     private void solve() throws IOException {
         Stream<String> lines = br.lines();
         Optional<Integer> answer = lines.map((l) -> {
-            int gameNumber = matchNumber("Game", l, true);
             String[] draws = l.split(";");
             Optional<Draw> minimumCubesOpt = Arrays.stream(draws).
                     map(this::parseDraw).
