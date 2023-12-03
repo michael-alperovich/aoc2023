@@ -10,12 +10,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class Day02Part1 {
+public class Day02Part2 {
     private String fileName = this.getClass().getName();
-    private final int RED = 12;
-    private final int GREEN = 13;
-    private final int BLUE = 14;
 
+    class Draw {
+        public int red;
+        public int green;
+        public int blue;
+    }
     private int matchNumber(String regex, String line, boolean prefix) {
         Pattern pattern = Pattern.compile(prefix ? regex + " (\\d+)" : "(\\d+) " + regex);
         Matcher matcher = pattern.matcher(line);
@@ -26,11 +28,20 @@ public class Day02Part1 {
         }
     }
 
-    private boolean isDrawPossible(String draw) {
-        int red = matchNumber("red", draw,false);
-        int blue = matchNumber("blue", draw,false);
-        int green = matchNumber("green", draw,false);
-        return (red <= RED) && (blue <= BLUE) && (green <= GREEN);
+    private Draw parseDraw(String drawString) {
+        Draw draw = new Draw();
+        draw.red = matchNumber("red", drawString,false);
+        draw.blue = matchNumber("blue", drawString,false);
+        draw.green = matchNumber("green", drawString,false);
+        return draw;
+    }
+
+    private Draw combineDraws(Draw draw1, Draw draw2) {
+        Draw combinedDraw = new Draw();
+        combinedDraw.red = Integer.max(draw1.red, draw2.red);
+        combinedDraw.blue = Integer.max(draw1.blue, draw2.blue);
+        combinedDraw.green = Integer.max(draw1.green, draw2.green);
+        return combinedDraw;
     }
 
     private void solve() throws IOException {
@@ -38,10 +49,11 @@ public class Day02Part1 {
         Optional<Integer> answer = lines.map((l) -> {
             int gameNumber = matchNumber("Game", l, true);
             String[] draws = l.split(";");
-            Optional<Boolean> gamePossible = Arrays.stream(draws).
-                    map(this::isDrawPossible).
-                    reduce((game1, game2) -> game1 && game2);
-            return gamePossible.isPresent() && gamePossible.get() ? gameNumber : 0;
+            Optional<Draw> minimumCubesOpt = Arrays.stream(draws).
+                    map(this::parseDraw).
+                    reduce(this::combineDraws);
+            Draw minimumCubes = minimumCubesOpt.get();
+            return minimumCubes.red * minimumCubes.blue * minimumCubes.green;
         }).reduce(Integer::sum);
         answer.ifPresent(out::println);
     }
@@ -84,6 +96,6 @@ public class Day02Part1 {
 
     public static void main(String[] args) throws IOException {
         Locale.setDefault(Locale.US);
-        new Day02Part1().run();
+        new Day02Part2().run();
     }
 }
