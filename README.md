@@ -1,13 +1,2 @@
-# aoc2023
-
-# Repository Layout / Overview
-
-- Create branch with your name
-- Write code in your language of choice
-- Share you solution!
-- (optional) submit your solution to the private leaderboard below
-
-# private leaderboard code:
-- **url**: https://adventofcode.com/2023/leaderboard/private
-- **code**: `3433183-f46fef91`
-
+# AOC2023
+My solutions for [Advent of Code 2023](https://adventofcode.com/2023)
